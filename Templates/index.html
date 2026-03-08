@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block content %}
+    <script>
+        let hours= {{ hours | tojson }};
+        document.addEventListener("DOMContentLoaded",function() {
+            document.querySelector("#meet").addEventListener("change",function() {
+                fetch(`/dolu_saatler?meet=${this.value}`)
+                .then(response => response.json())
+                .then (dolu => {
+                    
+                        if (document.querySelector("#hours").innerHTML!==""){
+                        document.querySelector("#hours").replaceChildren()
+                        }
+            
+                    for (hour of  hours) { 
+                        let newbutton=document.createElement("button")
+                        newbutton.type="button";
+                        newbutton.innerHTML = hour 
+                        if (dolu.includes(hour)) {
+                            newbutton.disabled = true;
+
+
+                        }
+                        else {
+                            newbutton.onclick = function() {
+                            document.querySelector("#selected_hour").value=this.innerHTML
+                        }
+                        }
+                        document.getElementById("hours").appendChild(newbutton)
+
+                    }
+                })
+                
+            })
+            document.querySelector("form").onsubmit= function() {
+                const secilenSaat = document.querySelector("#selected_hour").value;
+
+                if (secilenSaat === "") {
+                    alert("Lütfen bir randevu saati giriniz")
+                    event.preventDefault();
+                    return false
+                }
+            }
+        
+        
+        })
+        
+    </script>
+ <form autocomplete="off" action="/randevu" method="post">
+    <label  for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <label for="surname">Surname:</label>
+    <input type="text" id="surname" name="surname" required>
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" name="phone" required>
+    <label for="meet">Meeting Date:</labepyl>
+    <input type="date" id="meet" name="meet" min="today" required>
+    <label for="service">Services:</label>
+    <select name="service" id="service">
+        {% for service in services %}
+        <option value="{{service}}">{{service}}</option>
+    {% endfor %}
+    </select>
+    
+    <button type="submit">Submit</button>
+    
+    <input type="hidden" id="selected_hour" name="hours" value="">
+
+    <br>
+    <div  id="hours">
+    
+    </div>
+    <br>
+    <br>
+    <br>
+    <a href="/login">Login</a>
+ </form>
+{% endblock %}

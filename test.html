@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+    <head>
+        <title>
+            Test
+        </title>
+        <script>
+            let hours = ["9:00","10:00","11:00"]
+            document.addEventListener("DOMContentLoaded",function() {
+                document.addEventListener("change" , function() {
+                    if (document.querySelector("#buttons")!=="") {
+                        document.querySelector("#buttons").replaceChildren()
+                    
+                    
+                    };
+                    for (k of hours) {
+                        let newbutton = document.createElement("button")
+                        newbutton.innerHTML = k 
+                        document.getElementById("buttons").appendChild(newbutton)
+                        newbutton.onclick= function() {
+                        document.querySelector("h1").innerHTML= `${this.innerHTML}`
+                       } 
+                    };
+
+                    
+                });
+
+
+            });
+            
+        </script>
+    
+    </head>
+    <body>
+        <form>
+            <input type="date" id="date" name="date">
+        </form>
+        <br>
+        <div id="buttons">
+        </div>
+        <br>
+        <h1 id="text">
+            
+        </h1>
+    </body>
+</html>
