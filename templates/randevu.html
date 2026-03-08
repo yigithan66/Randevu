@@ -1,6 +1,36 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Meeting Scheduled for name  {{ name }} {{ surname }} {{ phone }} on {{ meet }} for {{ service }} at {{ hours }} </h1>
-<a href="/randevular">View All Meetings</a>
+<div class="card" style="max-width:480px; margin:0 auto;">
+    <div class="success-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
 
+    <p class="card-title">Randevunuz Oluşturuldu!</p>
+    <p class="card-subtitle">SMS ile bilgilendirme gönderildi.</p>
+
+    <div style="margin-top:1.5rem;">
+        <div class="detail-row">
+            <span>Ad Soyad</span>
+            <span>{{ name }} {{ surname }}</span>
+        </div>
+        <div class="detail-row">
+            <span>Telefon</span>
+            <span>{{ phone }}</span>
+        </div>
+        <div class="detail-row">
+            <span>Hizmet</span>
+            <span>{{ service }}</span>
+        </div>
+        <div class="detail-row">
+            <span>Tarih</span>
+            <span>{{ meet }}</span>
+        </div>
+        <div class="detail-row">
+            <span>Saat</span>
+            <span>{{ hours }}</span>
+        </div>
+    </div>
+
+    <a href="/" class="btn-link">← Yeni Randevu Al</a>
+</div>
 {% endblock %}

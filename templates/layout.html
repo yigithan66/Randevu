@@ -1,32 +1,344 @@
 <!doctype html>
-<html>
-    <head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    </head>
-    <body>
-        <nav>
-            <ul>
-                {% if current_user.is_authenticated %}
-                    <li><a href="/logout">Logout</a></li>
-                {% else %}
-                    <li><a href="/login">Login</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    <div class="container mt-3">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category,message in messages %}
-                <div class=" alert alert-{{ category }}">{{message}}</li>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    {% block content %}
-    {% endblock %}
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Randevu Sistemi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --white: #fafafa;
+            --cream: #f5f0eb;
+            --gold: #c9a84c;
+            --gold-light: #e8d5a3;
+            --gray: #6b6b6b;
+            --light-gray: #e8e8e8;
+            --red: #e05252;
+            --green: #4caf7d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--black);
+            min-height: 100vh;
+        }
+
+        /* NAV */
+        nav {
+            background: var(--black);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold);
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1rem;
+        }
+
+        nav ul a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.4rem 1rem;
+            border: 1px solid transparent;
+            border-radius: 2px;
+            transition: all 0.2s;
+        }
+
+        nav ul a:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* FLASH */
+        .flash-container {
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+            padding: 0 1.5rem;
+        }
+
+        .alert {
+            padding: 0.8rem 1.2rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid;
+        }
+
+        .alert-success { background: #edf7f1; border-color: var(--green); color: #2d6a4f; }
+        .alert-danger  { background: #fdf0f0; border-color: var(--red);   color: #8b2e2e; }
+
+        /* MAIN */
+        main {
+            max-width: 700px;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--light-gray);
+            margin-top: 4rem;
+        }
+
+        /* CARD */
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 2.5rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--black);
+        }
+
+        .card-subtitle {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        /* FORM */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-bottom: 0.4rem;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid var(--light-gray);
+            border-radius: 4px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            background: white;
+            color: var(--black);
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--gold);
+        }
+
+        .btn-primary {
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 0.85rem 2rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .btn-primary:hover { background: #222; }
+
+        /* SAAT BUTONLARI */
+        .hours-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .hour-btn {
+            padding: 0.5rem 0.9rem;
+            border: 1.5px solid var(--black);
+            border-radius: 4px;
+            background: white;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .hour-btn:hover { background: var(--black); color: white; }
+
+        .hour-btn.selected {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: white;
+        }
+
+        .hour-btn:disabled {
+            background: var(--light-gray);
+            border-color: var(--light-gray);
+            color: #bbb;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        /* RANDEVULAR TABLE */
+        .randevu-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .randevu-table th {
+            text-align: left;
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--gray);
+            padding: 0.6rem 1rem;
+            border-bottom: 1.5px solid var(--light-gray);
+        }
+
+        .randevu-table td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        .randevu-table tr:last-child td { border-bottom: none; }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: var(--cream);
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--black);
+        }
+
+        .btn-danger {
+            background: none;
+            border: 1.5px solid #e0e0e0;
+            padding: 0.35rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            color: var(--gray);
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.15s;
+        }
+
+        .btn-danger:hover { border-color: var(--red); color: var(--red); }
+
+        /* SUCCESS PAGE */
+        .success-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .success-icon svg { width: 28px; height: 28px; stroke: white; fill: none; stroke-width: 2.5; }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.9rem;
+        }
+
+        .detail-row:last-child { border-bottom: none; }
+        .detail-row span:first-child { color: var(--gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; }
+        .detail-row span:last-child { font-weight: 500; }
+
+        .btn-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 2px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .btn-link:hover { color: var(--black); border-color: var(--black); }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="nav-brand">✦ Randevu</a>
+        <ul>
+            {% if current_user.is_authenticated %}
+                <li><a href="/randevular">Panel</a></li>
+                <li><a href="/logout">Çıkış</a></li>
+            {% else %}
+                <li><a href="/login">Giriş</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     </div>
 
-        <footer>
-            <p>Copyright 2026</p>
-        <footer>
-    </body>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>© 2026 Randevu Sistemi</p>
+    </footer>
+</body>
 </html>

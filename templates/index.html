@@ -1,78 +1,95 @@
 {% extends "layout.html" %}
 {% block content %}
-    <script>
-        let hours= {{ hours | tojson }};
-        document.addEventListener("DOMContentLoaded",function() {
-            document.querySelector("#meet").addEventListener("change",function() {
-                fetch(`/dolu_saatler?meet=${this.value}`)
+<script>
+    let hours = {{ hours | tojson }};
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector("#meet").addEventListener("change", function () {
+            fetch(`/dolu_saatler?meet=${this.value}`)
                 .then(response => response.json())
-                .then (dolu => {
-                    
-                        if (document.querySelector("#hours").innerHTML!==""){
-                        document.querySelector("#hours").replaceChildren()
-                        }
-            
-                    for (hour of  hours) { 
-                        let newbutton=document.createElement("button")
-                        newbutton.type="button";
-                        newbutton.innerHTML = hour 
+                .then(dolu => {
+                    const container = document.querySelector("#hours");
+                    container.replaceChildren();
+
+                    hours.forEach(hour => {
+                        let btn = document.createElement("button");
+                        btn.type = "button";
+                        btn.innerHTML = hour;
+                        btn.className = "hour-btn";
+
                         if (dolu.includes(hour)) {
-                            newbutton.disabled = true;
-
-
+                            btn.disabled = true;
+                        } else {
+                            btn.onclick = function () {
+                                document.querySelectorAll(".hour-btn").forEach(b => b.classList.remove("selected"));
+                                this.classList.add("selected");
+                                document.querySelector("#selected_hour").value = this.innerHTML;
+                            };
                         }
-                        else {
-                            newbutton.onclick = function() {
-                            document.querySelector("#selected_hour").value=this.innerHTML
-                        }
-                        }
-                        document.getElementById("hours").appendChild(newbutton)
+                        container.appendChild(btn);
+                    });
+                });
+        });
 
-                    }
-                })
-                
-            })
-            document.querySelector("form").onsubmit= function() {
-                const secilenSaat = document.querySelector("#selected_hour").value;
-
-                if (secilenSaat === "") {
-                    alert("Lütfen bir randevu saati giriniz")
-                    event.preventDefault();
-                    return false
-                }
+        document.querySelector("form").onsubmit = function (event) {
+            if (document.querySelector("#selected_hour").value === "") {
+                alert("Lütfen bir randevu saati seçiniz.");
+                event.preventDefault();
+                return false;
             }
-        
-        
-        })
-        
-    </script>
- <form autocomplete="off" action="/randevu" method="post">
-    <label  for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
-    <label for="surname">Surname:</label>
-    <input type="text" id="surname" name="surname" required>
-    <label for="phone">Phone Number:</label>
-    <input type="tel" id="phone" name="phone" required>
-    <label for="meet">Meeting Date:</labepyl>
-    <input type="date" id="meet" name="meet" min="today" required>
-    <label for="service">Services:</label>
-    <select name="service" id="service">
-        {% for service in services %}
-        <option value="{{service}}">{{service}}</option>
-    {% endfor %}
-    </select>
-    
-    <button type="submit">Submit</button>
-    
-    <input type="hidden" id="selected_hour" name="hours" value="">
+        };
+    });
+</script>
 
-    <br>
-    <div  id="hours">
-    
-    </div>
-    <br>
-    <br>
-    <br>
-    <a href="/login">Login</a>
- </form>
+<div class="card">
+    <p class="card-title">Randevu Al</p>
+    <p class="card-subtitle">Aşağıdaki formu doldurarak randevunuzu oluşturun.</p>
+
+    <form autocomplete="off" action="/randevu" method="post">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="name">Ad</label>
+                <input type="text" id="name" name="name" placeholder="Adınız" required>
+            </div>
+            <div class="form-group">
+                <label for="surname">Soyad</label>
+                <input type="text" id="surname" name="surname" placeholder="Soyadınız" required>
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div class="form-group">
+                <label for="phone">Telefon</label>
+                <input type="tel" id="phone" name="phone" placeholder="05XX XXX XX XX" required>
+            </div>
+            <div class="form-group">
+                <label for="service">Hizmet</label>
+                <select name="service" id="service">
+                    {% for service in services %}
+                        <option value="{{ service }}">{{ service }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="meet">Tarih</label>
+            <input type="date" id="meet" name="meet" required>
+        </div>
+
+        <div class="form-group" id="hours-wrapper" style="min-height:48px;">
+            <label>Saat Seçin</label>
+            <div class="hours-grid" id="hours"></div>
+            <p id="hours-hint" style="font-size:0.82rem; color:#999; margin-top:0.4rem;">Önce tarih seçin</p>
+        </div>
+
+        <input type="hidden" id="selected_hour" name="hours" value="">
+        <button type="submit" class="btn-primary">Randevu Oluştur</button>
+    </form>
+</div>
+
+<script>
+    document.querySelector("#meet").addEventListener("change", function() {
+        document.querySelector("#hours-hint").style.display = "none";
+    });
+</script>
 {% endblock %}

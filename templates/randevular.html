@@ -1,12 +1,50 @@
 {% extends "layout.html" %}
 {% block content %}
- {% for randevu in randevular %}
-    <p> {{ randevu.name }} {{ randevu.surname }} {{randevu.phone}} - {{ randevu.meet }} for {{ randevu.service }} at {{ randevu.hours }}</p>
-    <form action="/randevusil" method="post">
-    <input type="hidden" name="id" value="{{ randevu.id }}">
-    <input type="submit" value="SİL" onclick="return confirm('Bu randevuyu silmek istediğinize emin misiniz?');">
+<div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+        <div>
+            <p class="card-title">Randevular</p>
+            <p class="card-subtitle" style="margin-bottom:0;">Tüm randevuları buradan yönetin.</p>
+        </div>
+        <a href="/" class="btn-link" style="margin-top:0;">+ Yeni Randevu</a>
+    </div>
 
-    </form>
-    {% endfor %}
-    <a href="/">Home</a>
+    {% if randevular %}
+    <table class="randevu-table">
+        <thead>
+            <tr>
+                <th>Müşteri</th>
+                <th>Telefon</th>
+                <th>Hizmet</th>
+                <th>Tarih</th>
+                <th>Saat</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in randevular %}
+            <tr>
+                <td><strong>{{ r.name }} {{ r.surname }}</strong></td>
+                <td style="color:#666;">{{ r.phone }}</td>
+                <td><span class="badge">{{ r.service }}</span></td>
+                <td>{{ r.meet }}</td>
+                <td>{{ r.hours }}</td>
+                <td>
+                    <form action="/randevusil" method="post" style="margin:0;">
+                        <input type="hidden" name="id" value="{{ r.id }}">
+                        <button type="submit" class="btn-danger"
+                            onclick="return confirm('Bu randevuyu silmek istediğinize emin misiniz?')">Sil</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align:center; padding:3rem 0; color:#999;">
+        <p style="font-size:2rem; margin-bottom:0.5rem;">📅</p>
+        <p>Henüz randevu bulunmuyor.</p>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
