@@ -41,7 +41,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(150), nullable=False)
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
 @app.route("/")
 def index():
     # Geçmiş tarihleri engellemek için bugünün tarihini HTML'e metin olarak gönderiyoruz
