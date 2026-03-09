@@ -38,11 +38,11 @@
         <tbody>
             {% for r in randevular %}
             <tr>
-                <td><strong>{{ r.name }} {{ r.surname }}</strong></td>
-                <td style="color:#666;">{{ r.phone }}</td>
-                <td><span class="badge">{{ r.service }}</span></td>
-                <td>{{ r.meet }}</td>
-                <td>{{ r.hours }}</td>
+                <td data-label="Müşteri"><strong>{{ r.name }} {{ r.surname }}</strong></td>
+                <td data-label="Telefon">{{ r.phone }}</td>
+                <td data-label="Hizmet"><span class="badge">{{ r.service }}</span></td>
+                <td data-label="Tarih">{{ r.meet }}</td>
+                <td data-label="Saat">{{ r.hours }}</td>
                 <td>
                     <form action="/randevusil" method="post" style="margin:0;">
                         <input type="hidden" name="id" value="{{ r.id }}">
