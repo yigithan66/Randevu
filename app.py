@@ -44,7 +44,9 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 @app.route("/")
 def index():
-    return render_template('index.html', services=Services,hours=hours)
+    # Geçmiş tarihleri engellemek için bugünün tarihini HTML'e metin olarak gönderiyoruz
+    today_str = datetime.today().strftime('%Y-%m-%d')
+    return render_template('index.html', services=Services, hours=hours, today=today_str)
 
 @app.route('/randevu', methods=['POST'])
 def randevu():
@@ -71,8 +73,20 @@ def randevu():
 @app.route('/randevular')
 @login_required
 def randevular():
-    randevular=Randevu.query.all()
-    return render_template('randevular.html', randevular=randevular)
+    randevular = Randevu.query.all()
+    
+    # --- DASHBOARD İSTATİSTİKLERİ ---
+    today_date = datetime.today().date()
+    bugunku_randevular = sum(1 for r in randevular if r.meet == today_date)
+    
+    hizmet_sayilari = {}
+    for r in randevular:
+        hizmet_sayilari[r.service] = hizmet_sayilari.get(r.service, 0) + 1
+        
+    en_populer = max(hizmet_sayilari, key=hizmet_sayilari.get) if hizmet_sayilari else "-"
+    toplam = len(randevular)
+    
+    return render_template('randevular.html', randevular=randevular, bugunku=bugunku_randevular, populer=en_populer, toplam=toplam)
 @app.route("/randevusil", methods=['POST'])
 def randevusil():
     id = request.form.get("id")

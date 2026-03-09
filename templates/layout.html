@@ -22,7 +22,8 @@
 
         body {
             font-family: 'DM Sans', sans-serif;
-            background: var(--cream);
+            /* Düz krem yerine çok hafif, zarif bir gümüş/krem degradasyonu */
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             color: var(--black);
             min-height: 100vh;
         }
@@ -108,12 +109,15 @@
             margin-top: 4rem;
         }
 
-        /* CARD */
+       /* CARD */
         .card {
-            background: white;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.85); /* Hafif saydamlık */
+            border-radius: 12px; /* Köşeleri biraz daha yumuşattık */
             padding: 2.5rem;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+            /* Çok daha yumuşak ve geniş bir gölge ile havada durma hissi */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06); 
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px); /* Modern buzlu cam efekti */
         }
 
         .card-title {
@@ -308,6 +312,35 @@
         }
 
         .btn-link:hover { color: var(--black); border-color: var(--black); }
+        /* DASHBOARD İSTATİSTİK KUTULARI (Yeni Eklendi) */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-box {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--light-gray);
+            transition: transform 0.2s;
+        }
+        .stat-box:hover { transform: translateY(-3px); }
+        .stat-box h3 {
+            font-size: 1.8rem;
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 0.2rem;
+        }
+        .stat-box p {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>

@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+
 <div class="card">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
         <div>
@@ -8,7 +9,20 @@
         </div>
         <a href="/" class="btn-link" style="margin-top:0;">+ Yeni Randevu</a>
     </div>
-
+    <div class="stats-container">
+        <div class="stat-box">
+            <h3>{{ bugunku }}</h3>
+            <p>Bugünkü Randevular</p>
+        </div>
+        <div class="stat-box">
+            <h3>{{ populer }}</h3>
+            <p>En Çok Tercih Edilen</p>
+        </div>
+        <div class="stat-box">
+            <h3>{{ toplam }}</h3>
+            <p>Toplam Kayıt</p>
+        </div>
+    </div>
     {% if randevular %}
     <table class="randevu-table">
         <thead>

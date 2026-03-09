@@ -59,8 +59,7 @@
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
             <div class="form-group">
                 <label for="phone">Telefon</label>
-                <input type="tel" id="phone" name="phone" placeholder="05XX XXX XX XX" required>
-            </div>
+                <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" placeholder="5XX XXX XX XX" title="Başında sıfır olmadan 10 haneli numaranızı girin" required>
             <div class="form-group">
                 <label for="service">Hizmet</label>
                 <select name="service" id="service">
@@ -73,7 +72,7 @@
 
         <div class="form-group">
             <label for="meet">Tarih</label>
-            <input type="date" id="meet" name="meet" required>
+            <input type="date" id="meet" name="meet" min="{{ today }}" required>
         </div>
 
         <div class="form-group" id="hours-wrapper" style="min-height:48px;">
