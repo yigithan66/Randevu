@@ -67,7 +67,10 @@ def randevu():
         yeni=Randevu(name=name, surname=surname, meet=meet, service=service,hours=hours,phone=phone )
         db.session.add(yeni)
         db.session.commit()
-        sms_gonder(phone,f"randevunuz oluşturuldu:{meet} saat {hours} - {service} ")
+        try:
+            sms_gonder(phone,f"randevunuz oluşturuldu:{meet} saat {hours} - {service} ")
+        except Exception as e:
+            print(f"SMS gönderilemedi: {e}")
     return render_template('randevu.html', name=name, surname=surname, meet=meet, service=service, hours=hours, phone=phone)
 
 @app.route('/randevular')
