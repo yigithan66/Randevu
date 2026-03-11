@@ -131,6 +131,21 @@ def dolu_saatler():
     for randevu in randevular:
         dolu_saatler.append(randevu.hours)
     return jsonify(dolu_saatler)
+@app.route('/kurulum', methods=['GET', 'POST'])
+def kurulum():
+    if User.query.first():
+      return redirect(url_for("login"))
+    if request.method =="POST":
+        username=request.form.get("username")
+        password=request.form.get("password")
+        hashed = generate_password_hash(password, method='pbkdf2:sha256')
+        admin=User(username=username, password=hashed)
+        db.session.add(admin)
+        db.session.commit()
+        flash("admin hesabı oluşturuldu" , "success")
+        return redirect(url_for("login"))
+    return render_template("kurulum.html")
+
 
 
 
